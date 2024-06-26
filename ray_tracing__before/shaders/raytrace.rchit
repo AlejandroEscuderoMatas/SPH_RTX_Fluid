@@ -180,18 +180,18 @@ void main()
         {
             origin = worldPos;
             collisionNormal = worldNrm;
-            eta = 1/1.33;
-            rayDir      = refract(prd.rayDir, collisionNormal, eta);//GetRefractedRayDir(prd.rayDir, collisionNormal);
+            eta = 1.0002926/1.333;
+            //rayDir      = refract(prd.rayDir, collisionNormal, eta);//GetRefractedRayDir(prd.rayDir, collisionNormal);
         }  
         else
         {
             origin = prd.lastParticleCollision;
             collisionNormal = prd.lastPartCollNormal;
-            eta = 1.33/1;
-            rayDir      = refract(prd.rayDir, collisionNormal, eta);//GetRefractedRayDir(prd.rayDir, collisionNormal);
+            eta = 1.333/1.0002926;
+            //rayDir      = refract(prd.rayDir, collisionNormal, eta);//GetRefractedRayDir(prd.rayDir, collisionNormal);
         }
         
-        //rayDir      = refract(prd.rayDir, collisionNormal, eta);//GetRefractedRayDir(prd.rayDir, collisionNormal);
+        rayDir      = refract(prd.rayDir, collisionNormal, eta);//GetRefractedRayDir(prd.rayDir, collisionNormal);
         prd.attenuation *= mat.specular;
         prd.done         = 0;
         prd.rayOrigin    = origin;

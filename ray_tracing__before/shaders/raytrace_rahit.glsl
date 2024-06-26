@@ -44,27 +44,27 @@ void main()
     // If the surface is refractant
     if(mat.illum == 5)
     {
-      // Indices of the triangle
-      ivec3 ind = indices.i[gl_PrimitiveID];  // gl_PrimitiveID allows us to find the vertices of the triangle hit by the ray
-      // Vertex of the triangle
-      Vertex v0 = vertices.v[ind.x];
-      Vertex v1 = vertices.v[ind.y];
-      Vertex v2 = vertices.v[ind.z];
-
-      // Computing the coordinates of the hit position
-      const vec3 barycentrics = vec3(1.0 - attribs.x - attribs.y, attribs.x, attribs.y);
-
-      const vec3 pos      = v0.pos * barycentrics.x + v1.pos * barycentrics.y + v2.pos * barycentrics.z;
-      const vec3 worldPos = vec3(gl_ObjectToWorldEXT * vec4(pos, 1.0));  // Transforming the position to world space
-
-      // Computing the normal at hit position
-      const vec3 nrm      = v0.nrm * barycentrics.x + v1.nrm * barycentrics.y + v2.nrm * barycentrics.z;
-      const vec3 worldNrm = normalize(vec3(nrm * gl_WorldToObjectEXT));  // Transforming the normal to world space
-
       if(prd.isRefracted)  // and the ray is alrealdy a refracted ray
       {
+        // Indices of the triangle
+        ivec3 ind = indices.i[gl_PrimitiveID];  // gl_PrimitiveID allows us to find the vertices of the triangle hit by the ray
+        // Vertex of the triangle
+        Vertex v0 = vertices.v[ind.x];
+        Vertex v1 = vertices.v[ind.y];
+        Vertex v2 = vertices.v[ind.z];
+
+        // Computing the coordinates of the hit position
+        const vec3 barycentrics = vec3(1.0 - attribs.x - attribs.y, attribs.x, attribs.y);
+
+        const vec3 pos      = v0.pos * barycentrics.x + v1.pos * barycentrics.y + v2.pos * barycentrics.z;
+        const vec3 worldPos = vec3(gl_ObjectToWorldEXT * vec4(pos, 1.0));  // Transforming the position to world space
+
+        // Computing the normal at hit position
+        const vec3 nrm      = v0.nrm * barycentrics.x + v1.nrm * barycentrics.y + v2.nrm * barycentrics.z;
+        const vec3 worldNrm = normalize(vec3(nrm * gl_WorldToObjectEXT));  // Transforming the normal to world space
+
         // If hasn't gone out of the water body == Particles are close by OR Ray hasn't been refracted max times
-        if(length(vec3(worldPos - prd.lastParticleCollision)) < 1.0f || prd.particleCollisionCount < 100)
+        if(length(vec3(worldPos - prd.lastParticleCollision)) < 10.0f || prd.particleCollisionCount < 50)
         {
           prd.lastParticleCollision = worldPos;  // We set the last collision to be this one in order to check the distance with next particle
           prd.particleCollisionCount += 1;  // Add 1 to the particles intersected count
@@ -72,8 +72,9 @@ void main()
           ignoreIntersectionEXT;
         }
         // Ray has intersected max particles allowed
-        else if(prd.particleCollisionCount == 100)
+        else if(prd.particleCollisionCount == 50)
         {
+          //prd.particleCollisionCount = 0;
           prd.lastParticleCollision = worldPos;
           prd.lastPartCollNormal    = worldNrm;
           return;
