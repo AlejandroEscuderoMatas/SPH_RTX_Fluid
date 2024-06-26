@@ -267,8 +267,8 @@ int main(int argc, char** argv)
   // -------Create the particle instances in the TLAS-------
   helloVk.loadModel(nvh::findFile("media/scenes/plane.obj", defaultSearchPaths, true),
                     glm::translate(glm::mat4(1), glm::vec3(0.0f, (float)fluidSim.getYLimitMin(), 0.0f)));
-  helloVk.loadModel(nvh::findFile("media/scenes/cube.obj", defaultSearchPaths, true),
-                    glm::scale(glm::mat4(1.f), glm::vec3(0.25f)) * glm::translate(glm::mat4(1), glm::vec3(0.5f, 0.25f, 0.5f)));
+  //helloVk.loadModel(nvh::findFile("media/scenes/cube.obj", defaultSearchPaths, true),
+  //                  glm::scale(glm::mat4(1.f), glm::vec3(0.25f)) * glm::translate(glm::mat4(1), glm::vec3(0.5f, 0.25f, 0.5f)));
   helloVk.loadModel(nvh::findFile("media/scenes/sphere.obj", defaultSearchPaths, true),
                     glm::scale(glm::mat4(1.f), glm::vec3(particlescale)) * glm::translate(glm::mat4(1), points[0]));
   
@@ -276,7 +276,7 @@ int main(int argc, char** argv)
   {
     glm::mat4 mat = glm::translate(glm::mat4(1), points[n]);
     mat = mat * glm::scale(glm::mat4(1.f), glm::vec3(particlescale));
-    helloVk.m_instances.push_back({mat,2});
+    helloVk.m_instances.push_back({mat,1});
   }
 
   if(fluidSim.cudaMode_ == "physics" || fluidSim.cudaMode_ == "full")

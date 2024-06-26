@@ -104,6 +104,7 @@ void HelloVulkan::updateUniformBuffer(const VkCommandBuffer& cmdBuf)
 void HelloVulkan::createDescriptorSetLayout()
 {
   auto nbTxt = static_cast<uint32_t>(m_textures.size());
+  auto smTxt = static_cast<uint32_t>(1);
 
   // Camera matrices
   m_descSetLayoutBind.addBinding(SceneBindings::eGlobals, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1,
@@ -115,6 +116,10 @@ void HelloVulkan::createDescriptorSetLayout()
   // Textures
   m_descSetLayoutBind.addBinding(SceneBindings::eTextures, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, nbTxt,
                                  VK_SHADER_STAGE_FRAGMENT_BIT | VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR);
+
+  // Skymap
+  m_descSetLayoutBind.addBinding(SceneBindings::eSkyMap, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, smTxt,
+                                 VK_SHADER_STAGE_FRAGMENT_BIT | VK_SHADER_STAGE_MISS_BIT_KHR);
 
 
   m_descSetLayout = m_descSetLayoutBind.createLayout(m_device);
@@ -143,6 +148,7 @@ void HelloVulkan::updateDescriptorSet()
     diit.emplace_back(texture.descriptor);
   }
   writes.emplace_back(m_descSetLayoutBind.makeWriteArray(m_descSet, SceneBindings::eTextures, diit.data()));
+
 
   // Writing the information
   vkUpdateDescriptorSets(m_device, static_cast<uint32_t>(writes.size()), writes.data(), 0, nullptr);
@@ -976,7 +982,7 @@ void HelloVulkan::updateParticlesInstances(std::vector <glm::vec3> partPos)
 
   for(int i = 0; i < nParts; i++)
   {
-    int       partIdx  = i + 2;
+    int       partIdx  = i + 1;
     //glm::mat4 transform = m_instances[partIdx].transform;
     //transform           = glm::translate(transform, partPos[i]);
 
